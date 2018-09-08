@@ -5,7 +5,7 @@
 #define FILENAME_FORMAT "%d.log" // https://en.wikipedia.org/wiki/8.3_filename
 
 #include <SPI.h>
-#include <SD/SD.h>
+#include <SD.h>
 
 #include "constants.h"
 #include "sensor.h"

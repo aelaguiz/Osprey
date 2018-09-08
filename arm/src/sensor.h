@@ -1,7 +1,7 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include <Adafruit_Sensor/Adafruit_Sensor.h>
+#include <Adafruit_Sensor.h>
 #include <Arduino.h>
 
 #include "kalman.h"

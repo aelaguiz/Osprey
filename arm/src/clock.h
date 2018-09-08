@@ -2,7 +2,7 @@
 #define CLOCK_H
 
 #include "sensor.h"
-#include <RTC/RTCZero.h>
+#include <RTCZero.h>
 
 namespace Osprey {
   class Clock : public virtual Sensor {

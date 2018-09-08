@@ -9,9 +9,8 @@
 #include "event.h"
 #include "gps.h"
 #include "radio.h"
-#include "thermometer.h"
 
-#define HEARTBEAT_LED 8
+#define HEARTBEAT_LED 13
 #define HEARTBEAT_INTERVAL 25
 
 namespace Osprey {
@@ -22,7 +21,6 @@ namespace Osprey {
   Osprey::Clock clock;
   GPS gps;
   Radio radio;
-  Thermometer thermometer;
 
   extern int commandStatus;
   int counter;

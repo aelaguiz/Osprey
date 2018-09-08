@@ -1,66 +1,59 @@
 #include "barometer.h"
 
-Adafruit_BMP085_Unified Barometer::barometer = Adafruit_BMP085_Unified(18001);
+Adafruit_BMP280 Barometer::barometer = Adafruit_BMP280();
 float Barometer::pressureSetting = DEFAULT_PRESSURE_SETTING;
 
 Barometer::Barometer() : Sensor(KALMAN_PROCESS_NOISE, KALMAN_MEASUREMENT_NOISE, KALMAN_ERROR) {
-  thermometer = Thermometer();
-  altitude = kalmanInit(0);
+	altitude = kalmanInit(0);
 }
 
 int Barometer::init() {
-  return barometer.begin();
+	return barometer.begin();
+}
+
+float Barometer::getTemperature() {
+	// Get ambient temperature (in celsius)
+	float temperature = barometer.readTemperature();
+
+	return temperature;
 }
 
 float Barometer::getPressure() {
-  sensors_event_t event;
-  barometer.getEvent(&event);
+	float pressure = barometer.readPressure();
 
-  if(!event.pressure) {
-    return NO_DATA;
-  }
+	if(!pressure) {
+		return NO_DATA;
+	}
 
-  kalmanUpdate(&altitude, event.pressure);
-  return altitude.value;
+	kalmanUpdate(&altitude, pressure);
+	return altitude.value;
 }
 
 float Barometer::getAltitudeAboveSeaLevel() {
-  float pressure = getPressure();
-
-  if(pressure == NO_DATA) {
-    return NO_DATA;
-  }
-
-  return getPressureAltitude(pressureSetting * MERCURY_TO_HPA_CONVERSION, pressure, thermometer.getTemperature());
+	return getPressureAltitude(pressureSetting * MERCURY_TO_HPA_CONVERSION);
 }
 
 float Barometer::getAltitudeAboveGround() {
-  float pressure = getPressure();
-
-  if(pressure == NO_DATA) {
-    return NO_DATA;
-  }
-
-  return getPressureAltitude(SENSORS_PRESSURE_SEALEVELHPA, pressure, thermometer.getTemperature()) - groundLevel;
+	return getPressureAltitude(SENSORS_PRESSURE_SEALEVELHPA) - groundLevel;
 }
 
 void Barometer::setPressureSetting(float pressureSetting) {
-  Barometer::pressureSetting = pressureSetting;
+	Barometer::pressureSetting = pressureSetting;
 }
 
 float Barometer::getPressureSetting() {
-  return pressureSetting;
+	return pressureSetting;
 }
 
 void Barometer::zero() {
-  setGroundLevel();
+	setGroundLevel();
 }
 
-float Barometer::getPressureAltitude(float setting, float pressure, float temperature) {
-  // Convert atmospheric pressure, SLP, and temp to altitude
-  return barometer.pressureToAltitude(setting, pressure, temperature);
+float Barometer::getPressureAltitude(float setting) {
+	// Convert atmospheric pressure, SLP, and temp to altitude
+	return barometer.readAltitude(setting);
 }
 
 void Barometer::setGroundLevel() {
-  groundLevel = getPressureAltitude(SENSORS_PRESSURE_SEALEVELHPA, getPressure(), thermometer.getTemperature());
+	groundLevel = getPressureAltitude(SENSORS_PRESSURE_SEALEVELHPA);
 }

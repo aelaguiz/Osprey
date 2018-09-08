@@ -1,9 +1,7 @@
 #ifndef ACCELEROMETER_H
 #define ACCELEROMETER_H
 
-#include <Adafruit_LSM303DLHC/Adafruit_LSM303_U.h>
-#include <Adafruit_L3GD20_U/Adafruit_L3GD20_U.h>
-#include <Adafruit_10DOF/Adafruit_10DOF.h>
+#include <Adafruit_LSM9DS1.h>
 #include <math.h>
 
 #include "constants.h"
@@ -27,9 +25,7 @@ class Accelerometer : public virtual Sensor {
     void getMagOrientation(sensors_vec_t *orientation);
 
   protected:
-    static Adafruit_10DOF dof;
-    static Adafruit_LSM303_Accel_Unified accelerometer;
-    static Adafruit_LSM303_Mag_Unified magnetometer;
+    static Adafruit_LSM9DS1 lsm;
 
     kalman_t roll;
     kalman_t pitch;

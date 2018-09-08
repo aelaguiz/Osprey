@@ -1,7 +1,7 @@
 #ifndef GPS_H
 #define GPS_H
 
-#include <Adafruit-GPS-Library/Adafruit_GPS.h>
+#include <Adafruit_GPS.h>
 #include <stdlib.h>
 #include <wiring_private.h>
 #include <Wire.h>
