@@ -1,6 +1,6 @@
 #include "radio.h"
 
-Uart *Radio::RadioSerial = &Serial1;
+//Uart *Radio::RadioSerial = &Serial1;
 
 char Radio::message1[RADIO_MAX_LINE_LENGTH];
 char Radio::message2[RADIO_MAX_LINE_LENGTH];
@@ -11,7 +11,7 @@ char* Radio::currentMessage = message2;
 int Radio::messagePosition = 0;
 
 int Radio::init() {
-	RadioSerial->begin(RADIO_BAUD);
+	//RadioSerial->begin(RADIO_BAUD);
 
 	if(!logger.init()) {
 		return 0;
@@ -25,9 +25,9 @@ int Radio::init() {
 void Radio::send(const char* const message) {
 	Serial.println(message);
 
-	for(int i=0; message[i] != '\0'; i++) {
-		RadioSerial->write(message[i]);
-	}
+	//for(int i=0; message[i] != '\0'; i++) {
+		//RadioSerial->write(message[i]);
+	//}
 
 	if(isLogging()) {
 		logger.log(message);
@@ -63,6 +63,7 @@ void Radio::clear() {
 }
 
 void Radio::read() {
+	return ;
 	if(!RadioSerial->available()) {
 		return;
 	}

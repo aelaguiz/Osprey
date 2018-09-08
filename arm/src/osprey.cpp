@@ -24,6 +24,16 @@ void loop(void) {
 void Osprey::printJSON() {
 	// The JSON structure is simple enough. Rather than bringing in another
 	// library to do a bunch of heavylifting, just construct the string manually.
+	//
+	
+	// Trigger an update of gps info
+	gps.update();
+
+	radio.send(", \"speed\": ");
+	radio.send(gps.getSpeed());
+
+	radio.send(", \"gps_altitude\": ");
+	radio.send(gps.getAltitude());
 
 	radio.send("{");
 
@@ -145,6 +155,11 @@ void Osprey::initSensors() {
 		printInitError("Failed to intialize events");
 	}
 	Serial.println("Initialized events");
+
+	if(!fona.init()) {
+		printInitError("Failed to initialize FONA");
+	}
+	Serial.println("Initialized FONA");
 
 	if(!gps.init()) {
 		printInitError("Failed to intialize GPS");

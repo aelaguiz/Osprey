@@ -9,6 +9,7 @@
 #include "event.h"
 #include "gps.h"
 #include "radio.h"
+#include "fona.h"
 
 #define HEARTBEAT_LED 13
 #define HEARTBEAT_INTERVAL 25
@@ -19,7 +20,8 @@ namespace Osprey {
   Battery battery;
   Event event;
   Osprey::Clock clock;
-  GPS gps;
+  FONA fona;
+  GPS gps(fona);
   Radio radio;
 
   extern int commandStatus;

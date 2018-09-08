@@ -1,16 +1,11 @@
 #ifndef GPS_H
 #define GPS_H
 
-#include <Adafruit_GPS.h>
 #include <stdlib.h>
-#include <wiring_private.h>
-#include <Wire.h>
+#include "fona.h"
 
 #include "sensor.h"
 
-#define GPS_RX_PIN 11
-#define GPS_TX_PIN 10
-#define GPS_BAUD 9600
 #define ISO_8601_LENGTH 32
 
 #define OUT_OF_RANGE_DELTA 0.001
@@ -22,9 +17,10 @@
 
 class GPS : public virtual Sensor {
   public:
-    GPS();
+    GPS(FONA &fona);
     int init();
 
+    bool update();
     float getLatitude();
     float getLongitude();
     float getSpeed();
@@ -32,10 +28,8 @@ class GPS : public virtual Sensor {
     int getQuality();
     char* getIso8601();
 
-    static Uart GPSSerial;
-    static Adafruit_GPS gps;
-
   protected:
+    FONA &fona;
     int validCoordinate(float previous, float next, int *outOfRange);
 
     char iso8601[ISO_8601_LENGTH];
