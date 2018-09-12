@@ -1,8 +1,11 @@
 #include "fona.h"
 
-Adafruit_FONA FONA::fona = Adafruit_FONA(FONA_RST);
+#include <SoftwareSerial.h>
 
-HardwareSerial *fonaSerial = &Serial1;
+SoftwareSerial fonaSS = SoftwareSerial(FONA_TX, FONA_RX);
+SoftwareSerial *fonaSerial = &fonaSS;
+
+Adafruit_FONA FONA::fona = Adafruit_FONA(FONA_RST);
 
 FONA::FONA() : Sensor(KALMAN_PROCESS_NOISE, KALMAN_MEASUREMENT_NOISE, KALMAN_ERROR) {
 }

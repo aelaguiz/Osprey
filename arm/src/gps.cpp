@@ -1,4 +1,5 @@
 #include "gps.h"
+//HardwareSerial *fonaSerial = &Serial1;
 
 GPS::GPS(FONA &fona) : Sensor(KALMAN_PROCESS_NOISE, KALMAN_MEASUREMENT_NOISE, KALMAN_ERROR), fona(fona) {
 	latitude = 0;

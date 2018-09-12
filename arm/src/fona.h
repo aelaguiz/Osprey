@@ -6,9 +6,10 @@
 #include <Adafruit_FONA.h>
 #include "sensor.h"
 
-#define FONA_RX 5
-#define FONA_TX 6
-#define FONA_RST 9
+#define FONA_RX  9
+#define FONA_TX  8
+#define FONA_RST 4
+#define FONA_RI  7
 
 #define NET_STATUS_NOT_REGISTERED 0
 #define NET_STATUS_REGISTERED 1
