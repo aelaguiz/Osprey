@@ -29,12 +29,6 @@ void Osprey::printJSON() {
 	// Trigger an update of gps info
 	gps.update();
 
-	radio.send(", \"speed\": ");
-	radio.send(gps.getSpeed());
-
-	radio.send(", \"gps_altitude\": ");
-	radio.send(gps.getAltitude());
-
 	radio.send("{");
 
 	radio.send("\"roll\": ");

@@ -1,7 +1,7 @@
 #ifndef ACCELEROMETER_H
 #define ACCELEROMETER_H
 
-#include <Adafruit_LSM9DS1.h>
+#include <Adafruit_LSM303.h>
 #include <math.h>
 
 #include "constants.h"
@@ -22,10 +22,9 @@ class Accelerometer : public virtual Sensor {
     float getAcceleration();
     float getRawAcceleration();
     void getAccelOrientation(sensors_vec_t *orientation);
-    float getMagOrientation(sensors_vec_t *orientation);
 
   protected:
-    static Adafruit_LSM9DS1 lsm;
+    static Adafruit_LSM303 lsm;
 
     kalman_t roll;
     kalman_t pitch;

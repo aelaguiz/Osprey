@@ -1,6 +1,6 @@
 #include "barometer.h"
 
-Adafruit_BMP280 Barometer::barometer = Adafruit_BMP280();
+Adafruit_MPL3115A2 Barometer::barometer = Adafruit_MPL3115A2();
 float Barometer::pressureSetting = DEFAULT_PRESSURE_SETTING;
 
 Barometer::Barometer() : Sensor(KALMAN_PROCESS_NOISE, KALMAN_MEASUREMENT_NOISE, KALMAN_ERROR) {
@@ -13,13 +13,13 @@ int Barometer::init() {
 
 float Barometer::getTemperature() {
 	// Get ambient temperature (in celsius)
-	float temperature = barometer.readTemperature();
+	float temperature = barometer.getTemperature();
 
 	return temperature;
 }
 
 float Barometer::getPressure() {
-	float pressure = barometer.readPressure();
+	float pressure = barometer.getPressure();
 
 	if(!pressure) {
 		return NO_DATA;
@@ -30,11 +30,11 @@ float Barometer::getPressure() {
 }
 
 float Barometer::getAltitudeAboveSeaLevel() {
-	return getPressureAltitude(pressureSetting * MERCURY_TO_HPA_CONVERSION);
+	return barometer.getAltitude();
 }
 
 float Barometer::getAltitudeAboveGround() {
-	return getPressureAltitude(SENSORS_PRESSURE_SEALEVELHPA) - groundLevel;
+	return barometer.getAltitude() - groundLevel;
 }
 
 void Barometer::setPressureSetting(float pressureSetting) {
@@ -51,9 +51,10 @@ void Barometer::zero() {
 
 float Barometer::getPressureAltitude(float setting) {
 	// Convert atmospheric pressure, SLP, and temp to altitude
-	return barometer.readAltitude(setting);
+	barometer.setSeaPressure(setting);
+	return barometer.getAltitude();
 }
 
 void Barometer::setGroundLevel() {
-	groundLevel = getPressureAltitude(SENSORS_PRESSURE_SEALEVELHPA);
+	groundLevel = barometer.getAltitude();
 }

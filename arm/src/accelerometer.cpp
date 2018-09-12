@@ -1,6 +1,6 @@
 #include "accelerometer.h"
 
-Adafruit_LSM9DS1 Accelerometer::lsm = Adafruit_LSM9DS1();
+Adafruit_LSM303 Accelerometer::lsm = Adafruit_LSM303();
 
 Accelerometer::Accelerometer() : Sensor(KALMAN_PROCESS_NOISE, KALMAN_MEASUREMENT_NOISE, KALMAN_ERROR) {
 	roll = kalmanInit(0);
@@ -38,22 +38,19 @@ float Accelerometer::getPitch() {
 }
 
 float Accelerometer::getHeading() {
-	sensors_event_t a, m, g, temp;
-	lsm.getEvent(&a, &m, &g, &temp);
-
 	float fHeading;
 
-	if (m.magnetic.y > 0)
+	if (lsm.magData.y > 0)
 	{
-		fHeading = 90 - (atan(m.magnetic.x / m.magnetic.y) * (180 / M_PI));
+		fHeading = 90 - (atan(lsm.magData.x / lsm.magData.y) * (180 / M_PI));
 	}
-	else if (m.magnetic.y < 0)
+	else if (lsm.magData.y < 0)
 	{
-		fHeading = - (atan(m.magnetic.x / m.magnetic.y) * (180 / M_PI));
+		fHeading = - (atan(lsm.magData.x / lsm.magData.y) * (180 / M_PI));
 	}
 	else // hy = 0
 	{
-		if (m.magnetic.x < 0) fHeading = 180;
+		if (lsm.magData.x < 0) fHeading = 180;
 		else fHeading = 0;
 	}
 
@@ -67,15 +64,10 @@ float Accelerometer::getAcceleration() {
 }
 
 float Accelerometer::getRawAcceleration() {
-	sensors_event_t a, m, g, temp;
-	lsm.getEvent(&a, &m, &g, &temp);
-
-	return sqrt(pow(a.acceleration.x, 2) + pow(a.acceleration.y, 2) + pow(a.acceleration.z, 2)) * MS2_TO_G;
+	return sqrt(pow(lsm.accelData.x, 2) + pow(lsm.accelData.y, 2) + pow(lsm.accelData.z, 2)) * MS2_TO_G;
 }
 
 void Accelerometer::getAccelOrientation(sensors_vec_t *orientation) {
-	//sensors_event_t a, m, g, temp;
-	//lsm.getEvent(&a, &m, &g, &temp);
-
-	//dof.accelGetOrientation(&event, orientation);
+	orientation->roll = atan2(lsm.accelData.y, lsm.accelData.z) * 180/M_PI;
+	orientation->pitch = atan2(-lsm.accelData.x, sqrt(lsm.accelData.y*lsm.accelData.y + lsm.accelData.z*lsm.accelData.z)) * 180/M_PI;
 }
