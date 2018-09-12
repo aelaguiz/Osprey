@@ -23,6 +23,9 @@ void Event::check() {
 	float acceleration = accelerometer.getAcceleration();
 	float altitude = barometer.getAltitudeAboveGround();
 
+	Serial.print("Event phase: ");
+	Serial.println(phase);
+
 	switch(phase) {
 		case PAD:
 			phasePad(acceleration);
@@ -52,12 +55,14 @@ void Event::check() {
 void Event::phasePad(float acceleration) {
 	// Move to boost after motor ignition
 	if(acceleration >= BOOST_ACCELERATION) {
+		Serial.println("PHASE PAD: BOOST DETECTED");
 		phase = BOOST;
 		return;
 	}
 
 	// If we missed the boost acceleration for some reason, jump to coast
 	if(acceleration <= COAST_ACCELERATION) {
+		Serial.println("PHASE PAD: COASTING");
 		phase = COAST;
 		return;
 	}
@@ -65,6 +70,7 @@ void Event::phasePad(float acceleration) {
 
 void Event::phaseBoost(float acceleration) {
 	if(acceleration <= COAST_ACCELERATION) {
+		Serial.println("PHASE BOOST: COASTING");
 		phase = COAST;
 	}
 }
@@ -73,6 +79,7 @@ void Event::phaseCoast(float acceleration, float altitude) {
 	// If apogee is pending, as soon as the altitude decreases, fire it
 	if(pendingApogee) {
 		if(previousAltitude - altitude > APOGEE_ALTITUDE_DELTA) {
+			Serial.println("PHASE COAST: APOGEE (ALTITUDE)");
 			atApogee(APOGEE_CAUSE_ALTITUDE);
 		}
 	}
@@ -80,6 +87,7 @@ void Event::phaseCoast(float acceleration, float altitude) {
 	// If the apogee countdown is finished, fire it
 	int apogeeCountdownCheck = checkApogeeCountdowns();
 	if(apogeeCountdownCheck > 0) {
+		Serial.println("PHASE COAST: APOGEE (COUNTDOWN)");
 		atApogee(apogeeCountdownCheck);
 		return;
 	}
@@ -109,6 +117,7 @@ void Event::phaseCoast(float acceleration, float altitude) {
 
 	// If we're now in free fall we must have missed apogee so immediately fire the drogue
 	if(isInFreeFall(altitude)) {
+		Serial.println("PHASE COAST: APOGEE (FREEFALL)");
 		atApogee(APOGEE_CAUSE_FREE_FALL);
 		phase = DROGUE;
 		return;
@@ -118,6 +127,7 @@ void Event::phaseCoast(float acceleration, float altitude) {
 void Event::phaseDrogue(float acceleration, float altitude) {
 	// If we're in the drogue phase and still in free fall fire everything in a desperate attempt to save our ass
 	if(isInFreeFall(altitude)) {
+		Serial.println("PHASE DROGUE: MAIN (PANIC)");
 		panic();
 		phase = MAIN;
 		return;
@@ -128,6 +138,7 @@ void Event::phaseDrogue(float acceleration, float altitude) {
 		event_t *event = &events[i];
 
 		if(event->altitude > 0 && altitude < event->altitude) {
+			Serial.println("PHASE DROGUE: MAIN (ALTITUDE)");
 			fire(i);
 			phase = MAIN;
 		}
@@ -142,6 +153,7 @@ void Event::phaseMain(float altitude) {
 
 	// Once the altitude stops changing and is stable, go to landed
 	if(landedAltitudeInRange >= LANDED_ALTITUDE_LIMIT) {
+		Serial.println("PHASE MAIN: LANDED");
 		phase = LANDED;
 	}
 }
@@ -156,6 +168,8 @@ void Event::phaseLanded() {
 		radio.disableLogging();
 		radio.enableLogging();
 		landed = 1;
+
+		Serial.println("LANDED");
 	}
 }
 

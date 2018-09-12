@@ -22,7 +22,7 @@ class Accelerometer : public virtual Sensor {
     float getAcceleration();
     float getRawAcceleration();
     void getAccelOrientation(sensors_vec_t *orientation);
-    void getMagOrientation(sensors_vec_t *orientation);
+    float getMagOrientation(sensors_vec_t *orientation);
 
   protected:
     static Adafruit_LSM9DS1 lsm;

@@ -38,14 +38,26 @@ float Accelerometer::getPitch() {
 }
 
 float Accelerometer::getHeading() {
-	sensors_vec_t orientation;
-	getMagOrientation(&orientation);
+	sensors_event_t a, m, g, temp;
+	lsm.getEvent(&a, &m, &g, &temp);
 
-	if(!orientation.heading) {
-		return NO_DATA;
+	float fHeading;
+
+	if (m.magnetic.y > 0)
+	{
+		fHeading = 90 - (atan(m.magnetic.x / m.magnetic.y) * (180 / M_PI));
+	}
+	else if (m.magnetic.y < 0)
+	{
+		fHeading = - (atan(m.magnetic.x / m.magnetic.y) * (180 / M_PI));
+	}
+	else // hy = 0
+	{
+		if (m.magnetic.x < 0) fHeading = 180;
+		else fHeading = 0;
 	}
 
-	kalmanUpdate(&heading, orientation.heading);
+	kalmanUpdate(&heading, fHeading);
 	return heading.value;
 }
 
@@ -66,11 +78,4 @@ void Accelerometer::getAccelOrientation(sensors_vec_t *orientation) {
 	//lsm.getEvent(&a, &m, &g, &temp);
 
 	//dof.accelGetOrientation(&event, orientation);
-}
-
-void Accelerometer::getMagOrientation(sensors_vec_t *orientation) {
-	//sensors_event_t event;
-	//magnetometer.getEvent(&event);
-
-	//dof.magGetOrientation(SENSOR_AXIS_Z, &event, orientation);
 }
