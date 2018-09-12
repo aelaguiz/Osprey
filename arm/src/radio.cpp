@@ -64,38 +64,38 @@ void Radio::clear() {
 
 void Radio::read() {
 	return ;
-	if(!RadioSerial->available()) {
-		return;
-	}
+	//if(!RadioSerial->available()) {
+		//return;
+	//}
 
-	char c = RadioSerial->read();
+	//char c = RadioSerial->read();
 
-	// If the end of the line, set a NUL terminator and swap the message buffers
-	if(c == '\n') {
-		currentMessage[messagePosition] = '\0';
+	//// If the end of the line, set a NUL terminator and swap the message buffers
+	//if(c == '\n') {
+		//currentMessage[messagePosition] = '\0';
 
-		if(currentMessage == message1) {
-			currentMessage = message2;
-			previousMessage = message1;
-		} else {
-			currentMessage = message1;
-			previousMessage = message2;
-		}
+		//if(currentMessage == message1) {
+			//currentMessage = message2;
+			//previousMessage = message1;
+		//} else {
+			//currentMessage = message1;
+			//previousMessage = message2;
+		//}
 
-		messagePosition = 0;
-	} else {
-		currentMessage[messagePosition] = c;
-		messagePosition++;
-	}
+		//messagePosition = 0;
+	//} else {
+		//currentMessage[messagePosition] = c;
+		//messagePosition++;
+	//}
 
-	// Keep putting new chars in the last index of the message if we hit the limit
-	// Hopefully a newline will come through and properly terminate the string
-	if(messagePosition >= RADIO_MAX_LINE_LENGTH) {
-		messagePosition--;
-	}
+	//// Keep putting new chars in the last index of the message if we hit the limit
+	//// Hopefully a newline will come through and properly terminate the string
+	//if(messagePosition >= RADIO_MAX_LINE_LENGTH) {
+		//messagePosition--;
+	//}
 
-	// Keep reading until there is no more data to read
-	return read();
+	//// Keep reading until there is no more data to read
+	//return read();
 }
 
 int Radio::enableLogging() {

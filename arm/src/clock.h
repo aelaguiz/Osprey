@@ -2,7 +2,9 @@
 #define CLOCK_H
 
 #include "sensor.h"
-#include <RTCZero.h>
+
+// For now, removing RTC uspport and just using harware clock
+//#include <RTCZero.h>
 
 namespace Osprey {
   class Clock : public virtual Sensor {
@@ -13,7 +15,8 @@ namespace Osprey {
       int getSeconds();
 
     protected:
-      RTCZero rtc;
+      // RTCZero rtc;
+      unsigned long startTime;
   };
 }
 

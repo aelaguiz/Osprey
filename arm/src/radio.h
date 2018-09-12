@@ -2,7 +2,7 @@
 #define RADIO_H
 
 #include <Arduino.h>
-#include <avr/dtostrf.h>
+//#include <avr/dtostrf.h>
 
 #include "sensor.h"
 #include "logger.h"
@@ -31,7 +31,7 @@ class Radio : public virtual Sensor {
     bool logging;
     Logger logger;
 
-    static Uart *RadioSerial;
+    //static Uart *RadioSerial;
 
     static char message1[];
     static char message2[];
